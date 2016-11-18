@@ -1,6 +1,6 @@
 
 #include <Keyboard.h>
-
+#include <Button.h> http://platformio.org/lib/show/919/Button/examples
 
 //Define all the buttons
 #define BUTTONPIN1 2
@@ -9,45 +9,27 @@
 #define BUTTONPIN4 5
 #define BUTTONPIN5 6
 
-
-
-
-OneButton button1(BUTTONPIN1, true);
-OneButton button2(BUTTONPIN2, true);
-OneButton button3(BUTTONPIN3, true);
-OneButton button4(BUTTONPIN4, true);
-OneButton button5(BUTTONPIN5, true);
-
-
-
+Button button1(BUTTONPIN1);
+Button button2(BUTTONPIN2);
+Button button3(BUTTONPIN3);
+Button button4(BUTTONPIN4);
+Button button5(BUTTONPIN5);
 
 const char jump = ' ';
 const int bend = KEY_DOWN_ARROW;
 const int hit = KEY_RIGHT_SHIFT	;
 const int cover = KEY_UP_ARROW;
 
-
-int lastreading1;
-int lastreading2;
-int lastreading3;
-int lastreading4;
-int lastreading5;
-
-int reading1 = 0;
-int reading2 = 0;
-int reading3 = 0;
-int reading4 = 0;
-int reading5 = 0;
-
-
-
 void setup() {
 
-  pinMode(BUTTONPIN1, INPUT_PULLUP);
-  pinMode(BUTTONPIN2, INPUT_PULLUP);
-  pinMode(BUTTONPIN3, INPUT_PULLUP);
-  pinMode(BUTTONPIN4, INPUT_PULLUP);
-  pinMode(BUTTONPIN5, INPUT_PULLUP);
+  button1.begin();
+  button2.begin();
+  button3.begin();
+  button4.begin();
+  button5.begin();
+
+  while (!Serial) { }; // for Leos
+	Serial.begin(9600)
 
   }
 
