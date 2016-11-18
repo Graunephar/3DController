@@ -28,26 +28,54 @@ const int hit = KEY_RIGHT_SHIFT	;
 const int cover = KEY_UP_ARROW;
 
 
+int lastreading1;
+int lastreading2;
+int lastreading3;
+int lastreading4;
+int lastreading5;
+
+int reading1 = 0;
+int reading2 = 0;
+int reading3 = 0;
+int reading4 = 0;
+int reading5 = 0;
+
+
 
 void setup() {
 
-  button1.attachClick(pressCover);
-  button2.attachClick(pressBend);
-  button3.attachClick(pressHit);
-  button4.attachClick(pressJump);
-  button5.attachClick(startAgain);
+  pinMode(BUTTONPIN1, INPUT_PULLUP);
+  pinMode(BUTTONPIN2, INPUT_PULLUP);
+  pinMode(BUTTONPIN3, INPUT_PULLUP);
+  pinMode(BUTTONPIN4, INPUT_PULLUP);
+  pinMode(BUTTONPIN5, INPUT_PULLUP);
+
   }
 
 
 void loop() {
 
 
-  // keep watching the push buttons:
-  button1.tick();
-  button2.tick();
-  button3.tick();
-  button4.tick();
-  button5.tick();
+    lastreading1 = reading1;
+    lastreading2 = reading2;
+    lastreading3 = reading3;
+    lastreading4 = reading4;
+    lastreading5 = reading5;
+
+    reading1 = digitalRead(BUTTONPIN1);
+    reading2 = digitalRead(BUTTONPIN2);
+    reading3 = digitalRead(BUTTONPIN3);
+    reading4 = digitalRead(BUTTONPIN4);
+    reading5 = digitalRead(BUTTONPIN5);
+
+    if(reading1 != lastreading1 && reading1 == LOW) pressCover();
+    if(reading2 != lastreading2 && reading2 == LOW) pressBend();
+    if(reading3 != lastreading3 && reading3 == LOW) pressHit();
+    if(reading4 != lastreading4 && reading4 == LOW) pressJump();
+    if(reading5 != lastreading5 && reading5 == LOW) startAgain();
+
+
+    delay(10);
 
 }
 
