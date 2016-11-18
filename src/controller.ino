@@ -1,48 +1,91 @@
+
+#include "OneButton.h"
 #include <Keyboard.h>
-#include <Arduino.h>
-#include <Button.h>        //https://github.com/JChristensen/Button
 
 
 //Define all the buttons
 #define BUTTONPIN1 2
 #define BUTTONPIN2 3
 #define BUTTONPIN3 4
-#define DEBOUNCE_MS 20     //A debounce time of 20 milliseconds usually works well for tactile button switches.
-#define PULLUP true        //To keep things simple, we use the Arduino's internal pullup resistor.
-#define INVERT true        //Since the pullup resistor will keep the pin high unless the
+#define BUTTONPIN4 5
+#define BUTTONPIN5 6
 
 
-Button Button1(BUTTONPIN1, PULLUP, INVERT, DEBOUNCE_MS);    //Declare the button
-Button Button2(BUTTONPIN2, PULLUP, INVERT, DEBOUNCE_MS);    //Declare the button
-Button Button3(BUTTONPIN3, PULLUP, INVERT, DEBOUNCE_MS);    //Declare the button
 
 
-const char jump = 's';
-const char bend = 'b';
-const char hit = 'h';
-const char cover = 'c';
+OneButton button1(BUTTONPIN1, true);
+OneButton button2(BUTTONPIN2, true);
+OneButton button3(BUTTONPIN3, true);
+OneButton button4(BUTTONPIN4, true);
+OneButton button5(BUTTONPIN5, true);
 
+
+
+
+const char jump = ' ';
+const int bend = KEY_DOWN_ARROW;
+const int hit = KEY_RIGHT_SHIFT	;
+const int cover = KEY_UP_ARROW;
 
 
 
 void setup() {
+  // Setup the Serial port. see http://arduino.cc/en/Serial/IfSerial
+  Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for Leonardo only
+  }
 
-  Keyboard.begin();
+  button1.attachClick(pressJump);
+  button2.attachClick(pressBend);
+  button3.attachClick(pressHit);
+  button4.attachClick(pressCover);
+  button5.attachClick(startAgain);
+  }
 
-}
 
 void loop() {
 
-  if(Button1.isPressed()) pressKey(jump);
 
-  if(Button2.wasPressed()) pressKey(bend);
+  // keep watching the push buttons:
+  button1.tick();
+  button2.tick();
+  button3.tick();
+  button4.tick();
+  button5.tick();
 
-  if(Button3.wasPressed()) pressKey(hit);
+}
 
+// ----- button callback functions
 
+void startAgain() {
+
+Serial.println("Restart");
+
+}
+
+void pressJump() {
+  pressKey(jump);
+}
+
+void pressBend() {
+  pressSpecialKey(bend);
+}
+
+void pressHit() {
+  pressSpecialKey(hit);
+}
+
+void pressCover(){
+  pressSpecialKey(cover);
 }
 
 void pressKey(char key) {
   Keyboard.press(key);
+  Keyboard.release(key);
+}
 
+void pressSpecialKey(int key) {
+  Keyboard.press(key);
+  Keyboard.release(key);
 }
