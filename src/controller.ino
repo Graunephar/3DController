@@ -30,16 +30,11 @@ const int cover = KEY_UP_ARROW;
 
 
 void setup() {
-  // Setup the Serial port. see http://arduino.cc/en/Serial/IfSerial
-  Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
-  }
 
-  button1.attachClick(pressJump);
+  button1.attachClick(pressCover);
   button2.attachClick(pressBend);
   button3.attachClick(pressHit);
-  button4.attachClick(pressCover);
+  button4.attachClick(pressJump);
   button5.attachClick(startAgain);
   }
 
@@ -56,12 +51,10 @@ void loop() {
 
 }
 
-// ----- button callback functions
+// ----- button callback fun  ctions
 
 void startAgain() {
-
-Serial.println("Restart");
-
+  pressKey(jump);
 }
 
 void pressJump() {
