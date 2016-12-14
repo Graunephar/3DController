@@ -1,6 +1,6 @@
 #include <I2Cdev.h>
 #include <MPU6050.h>
-#include "RunningAverage.h"
+#include "RunningAverage.h" //TODO: Use platform io lib when approved
 
 
 #define threshold 10000
@@ -22,7 +22,7 @@ int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int16_t resetvalue; // used for storing inital reading
 
-RunningAverage average(100000);
+RunningAverage average(10000);
 
 
 void setup() {
@@ -57,18 +57,18 @@ void loop() {
     double avg = average.getAverage();
 
     if(reading >= avg + threshold) {
-      Serial.println("OP OP OP");
-      delay(100);
+      Serial.println("NED NED NED");
+      delay(300);
     }
 
     if(reading <= avg - threshold) {
-      Serial.println("NED NED NED");
-      delay(100);
+      Serial.println("OP OP OP");
+      delay(300);
     }
 
     //Serial.print(avg); Serial.println(" ");
 
-    delay(10);
+    delay(100);
 }
 
 uint16_t read() {
