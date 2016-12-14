@@ -50,6 +50,6 @@ void setup() {
 
 void loop() {
     accelgyro.getAcceleration(&ax, &ay, &az);
-    Serial.print(ay - resetvalue); Serial.print(" ");
+    Serial.print(ay); Serial.println(" ");
 
 }
