@@ -1,5 +1,9 @@
 #include <I2Cdev.h>
 #include <MPU6050.h>
+#include "RunningAverage.h"
+
+
+#define threshold 10000
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
@@ -18,6 +22,7 @@ int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int16_t resetvalue; // used for storing inital reading
 
+RunningAverage average(100000);
 
 
 void setup() {
@@ -42,14 +47,32 @@ void setup() {
     Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 
 
-    //RESET
-    accelgyro.getAcceleration(&ax, &ay, &az);
-    resetvalue = ay;
 
     }
 
 void loop() {
-    accelgyro.getAcceleration(&ax, &ay, &az);
-    Serial.print(ay); Serial.println(" ");
+    int reading = read();
+    average.addValue(reading);
+
+    double avg = average.getAverage();
+
+    if(reading >= avg + threshold) {
+      Serial.println("OP OP OP");
+      delay(100);
+    }
+
+    if(reading <= avg - threshold) {
+      Serial.println("NED NED NED");
+      delay(100);
+    }
+
+    //Serial.print(avg); Serial.println(" ");
+
+    delay(10);
+}
+
+uint16_t read() {
+  accelgyro.getAcceleration(&ax, &ay, &az);
+  return ay;
 
 }
