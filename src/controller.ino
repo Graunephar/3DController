@@ -22,7 +22,7 @@ int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int16_t resetvalue; // used for storing inital reading
 
-RunningAverage average(10000);
+RunningAverage average(1000);
 
 
 void setup() {
@@ -54,13 +54,11 @@ void loop() {
 
     double avg = average.getAverage();
 
-    if(reading >= avg + threshold) { // Reading is 'threshold' bigger than average
-      Serial.println("OP OP OP");
-      //delay(400);
-    } else if(reading <= avg - threshold) {
-      Serial.println("NED NED NED");
-      delay(400);
-    }
+
+    Serial.print(avg);
+    Serial.print(",");
+    Serial.println(reading);
+
 
     //Serial.print(avg); Serial.println(" ");
 
