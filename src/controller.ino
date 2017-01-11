@@ -46,8 +46,6 @@ void setup() {
     Serial.println("Testing device connections...");
     Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 
-
-
     }
 
 void loop() {
@@ -56,14 +54,12 @@ void loop() {
 
     double avg = average.getAverage();
 
-    if(reading >= avg + threshold) {
-      Serial.println("NED NED NED");
-      delay(300);
-    }
-
-    if(reading <= avg - threshold) {
+    if(reading >= avg + threshold) { // Reading is 'threshold' bigger than average
       Serial.println("OP OP OP");
-      delay(300);
+      //delay(400);
+    } else if(reading <= avg - threshold) {
+      Serial.println("NED NED NED");
+      delay(400);
     }
 
     //Serial.print(avg); Serial.println(" ");
