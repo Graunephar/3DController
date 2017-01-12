@@ -57,7 +57,13 @@ void loop() {
 
     double avg = average.getAverage();
 
-
+    Serial.print(reading);
+    Serial.print(",");
+    Serial.print(avg);
+    Serial.print(",");
+    Serial.print(avg + threshold);
+    Serial.print(",");
+    Serial.println(avg - threshold);
 
 
 
