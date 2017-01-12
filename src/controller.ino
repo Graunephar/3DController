@@ -25,7 +25,7 @@ int16_t resetvalue; // used for storing inital reading
 
 RunningAverage average(avglengt);
 
-int initialavg;
+int count = 0;
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -56,19 +56,22 @@ void setup() {
       average.addValue(reading);
 
       double avg = average.getAverage();
+      
 
       if(reading >= avg + threshold) { // Reading is 'threshold' bigger than average
         Serial.println("OP OP OP");
-        delay(400);
+        //delay(400);
       } else if(reading <= avg - threshold) {
         Serial.println("NED NED NED");
-        delay(400);
+        //delay(400);
       }
 
       //Serial.print(avg); Serial.println(" ");
 
       delay(100);
   }
+
+
 uint16_t read() {
   accelgyro.getAcceleration(&ax, &ay, &az);
   return ay;
