@@ -51,22 +51,24 @@ void setup() {
     calibrate();
   }
 
-void loop() {
-    int reading = read();
-    average.addValue(reading);
+  void loop() {
+      int reading = read();
+      average.addValue(reading);
 
-    double avg = average.getAverage();
+      double avg = average.getAverage();
 
+      if(reading >= avg + threshold) { // Reading is 'threshold' bigger than average
+        Serial.println("OP OP OP");
+        delay(400);
+      } else if(reading <= avg - threshold) {
+        Serial.println("NED NED NED");
+        delay(400);
+      }
 
+      //Serial.print(avg); Serial.println(" ");
 
-
-
-
-    //Serial.print(avg); Serial.println(" ");
-
-    delay(100);
-}
-
+      delay(100);
+  }
 uint16_t read() {
   accelgyro.getAcceleration(&ax, &ay, &az);
   return ay;
