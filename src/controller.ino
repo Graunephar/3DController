@@ -3,7 +3,8 @@
 #include "RunningAverage.h" //TODO: Use platform io lib when approved
 
 
-#define threshold 10000
+#define threshold 9000
+#define avglengt 10000
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
@@ -22,8 +23,9 @@ int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int16_t resetvalue; // used for storing inital reading
 
-RunningAverage average(1000);
+RunningAverage average(avglengt);
 
+int initialavg;
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -46,18 +48,14 @@ void setup() {
     Serial.println("Testing device connections...");
     Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 
-    }
+    calibrate();
+  }
 
 void loop() {
     int reading = read();
     average.addValue(reading);
 
     double avg = average.getAverage();
-
-
-    Serial.print(avg);
-    Serial.print(",");
-    Serial.println(reading);
 
 
     //Serial.print(avg); Serial.println(" ");
@@ -69,4 +67,12 @@ uint16_t read() {
   accelgyro.getAcceleration(&ax, &ay, &az);
   return ay;
 
+}
+
+void calibrate() {
+  for (int i = 0; i < avglengt; i++) {
+    uint16_t value = read();
+    average.addValue(value);
+    delay(1);
+  }
 }
