@@ -1,11 +1,21 @@
 #include <I2Cdev.h>
 #include <MPU6050.h>
 #include "RunningAverage.h" //TODO: Use platform io lib when approved
+#include <SoftwareSerial.h>
+#include <Keyboard.h>
+
 
 
 #define threshold 9000
 #define avglengt 10000
 #define steplengt 650
+#define bumpthreshold 10000 // the treshold for a hit
+
+//Button chars
+const char jump = ' ';
+const int bend = KEY_DOWN_ARROW;
+const int hit = KEY_RIGHT_SHIFT	;
+const int cover = KEY_UP_ARROW;
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
@@ -29,10 +39,10 @@ RunningAverage average(avglengt);
 enum state {
   DOWN,
   UP,
-  NONE
+  HIT
 };
 
-state lastState = NONE;
+state lastState;
 
 unsigned long timestamp;
 
@@ -48,7 +58,7 @@ void setup() {
     // initialize serial communication
     // (38400 chosen because it works as well at 8MHz as it does at 16MHz, but
     // it's really up to you depending on your project)
-    Serial.begin(38400);
+    Serial.begin(9600);
 
     // initialize device
     Serial.println("Initializing I2C devices...");
@@ -59,9 +69,11 @@ void setup() {
     Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 
     calibrate();
+    Serial.println("GLAR");
   }
 
   void loop() {
+
 
       int reading = read();
       average.addValue(reading);
@@ -74,6 +86,8 @@ void setup() {
       } else if(reading <= avg - threshold) {
         changeState(DOWN);
         //delay(400);
+      } else if(ax > bumpthreshold) {
+        changeState(HIT);
       }
 
       //Serial.print(avg); Serial.println(" ");
@@ -88,7 +102,19 @@ void changeState(state newstate) {
 
       lastState = newstate;
       timestamp = millis();
-      Serial.println(newstate);
+
+      switch (newstate) {
+        case 1: pressJump();
+        Serial.println("UP");
+        break;
+        case 0: pressBend();
+        Serial.println("NED");
+        break;
+        case 2: pressHit();
+        Serial.println("HIT");
+
+      }
+      //Serial.write(newstate);
 
 
   }
@@ -106,4 +132,40 @@ void calibrate() {
     average.addValue(value);
     delay(1);
   }
+}
+
+
+
+// ----- button callback fun  ctions
+
+
+
+void startAgain() {
+  pressKey(jump);
+}
+
+void pressJump() {
+  pressKey(jump);
+}
+
+void pressBend() {
+  pressSpecialKey(bend);
+}
+
+void pressHit() {
+  pressSpecialKey(hit);
+}
+
+void pressCover(){
+  pressSpecialKey(cover);
+}
+
+void pressKey(char key) {
+  Keyboard.press(key);
+  Keyboard.release(key);
+}
+
+void pressSpecialKey(int key) {
+  Keyboard.press(key);
+  Keyboard.release(key);
 }
