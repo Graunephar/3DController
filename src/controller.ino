@@ -58,6 +58,10 @@ void loop() {
     double avg = average.getAverage();
 
 
+
+
+
+
     //Serial.print(avg); Serial.println(" ");
 
     delay(100);
