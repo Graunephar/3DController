@@ -70,6 +70,7 @@ void setup() {
 
     calibrate();
     Serial.println("GLAR");
+    pressJump();
   }
 
   void loop() {
@@ -162,10 +163,12 @@ void pressCover(){
 
 void pressKey(char key) {
   Keyboard.press(key);
+  delay(100);
   Keyboard.release(key);
 }
 
 void pressSpecialKey(int key) {
   Keyboard.press(key);
+  delay(100);
   Keyboard.release(key);
 }
