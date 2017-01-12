@@ -5,6 +5,7 @@
 
 #define threshold 9000
 #define avglengt 10000
+#define steplengt 650
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
@@ -25,7 +26,16 @@ int16_t resetvalue; // used for storing inital reading
 
 RunningAverage average(avglengt);
 
-int count = 0;
+enum state {
+  DOWN,
+  UP,
+  NONE
+};
+
+state lastState = NONE;
+
+unsigned long timestamp;
+
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -52,23 +62,35 @@ void setup() {
   }
 
   void loop() {
+
       int reading = read();
       average.addValue(reading);
 
       double avg = average.getAverage();
-      
 
       if(reading >= avg + threshold) { // Reading is 'threshold' bigger than average
-        Serial.println("OP OP OP");
+        changeState(UP);
         //delay(400);
       } else if(reading <= avg - threshold) {
-        Serial.println("NED NED NED");
+        changeState(DOWN);
         //delay(400);
       }
 
       //Serial.print(avg); Serial.println(" ");
 
       delay(100);
+  }
+
+
+void changeState(state newstate) {
+
+      if((millis() - timestamp) < steplengt) return; // functions as old delays
+
+      lastState = newstate;
+      timestamp = millis();
+      Serial.println(newstate);
+
+
   }
 
 
